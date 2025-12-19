@@ -25,6 +25,7 @@
 ******************************************************************************
 */
 
+#include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
@@ -77,6 +78,12 @@ static void *dpyUpdateAckEvent = NULL;
 
 #define JOYSTICK_COUNT 2
 static SDL_Joystick *joysticks[JOYSTICK_COUNT];
+
+void sigintHandler(int s)
+{
+	fprintf(stderr, "Caught SIGINT, shutting down...\n");
+	doQuit = 1;
+}
 
 int archUpdateEmuDisplay(int syncMode)
 {
@@ -256,7 +263,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK | SDL_INIT_VIDEO);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_JoystickEventState(SDL_ENABLE);
 
@@ -431,6 +438,7 @@ int main(int argc, char **argv)
 	piScanDevices();
 	
 	fprintf(stderr, "Powering on\n");
+	signal(SIGINT, sigintHandler);
 
 #ifdef RASPI_GPIO
 	gpioTogglePowerLed(1);

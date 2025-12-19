@@ -37,10 +37,10 @@ ECHO  = @echo
 # Flags
 #
 COMMON_FLAGS = -DLSB_FIRST -DNO_ASM -DNO_HIRES_TIMERS -DNO_FILE_HISTORY -DNO_EMBEDDED_SAMPLES -DUSE_SDL -DRASPI
-CFLAGS   = -g -w -O3 -ffast-math -fstrict-aliasing -fomit-frame-pointer $(COMMON_FLAGS)
-CPPFLAGS = -g $(COMMON_FLAGS)
+CFLAGS   = -g -w -O3 -ffast-math -fstrict-aliasing -fomit-frame-pointer -Wno-narrowing $(COMMON_FLAGS)
+CPPFLAGS = -g $(COMMON_FLAGS) -Wno-narrowing
 LDFLAGS  = 
-LIBS     =  -lSDL -lz -lbcm_host -lEGL -lGLESv2 -lpthread -ludev
+LIBS     =  -lSDL -lz -lpthread -ludev
 # Uncomment the following line to enable GPIO (requires wiring-pi)
 #CFLAGS   += -DRASPI_GPIO
 
@@ -48,7 +48,7 @@ ifdef RASPI_GPIO
 LIBS     += -lwiringPi
 endif
 
-TARGET   = bluemsx-pi
+TARGET   = bluemsx
 
 SRCS        = $(SOURCE_FILES)
 OBJS        = $(patsubst %.rc,%.res,$(patsubst %.cxx,%.o,$(patsubst %.cpp,%.o,$(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(filter %.c %.cc %.cpp %.cxx %.rc,$(SRCS)))))))
@@ -88,6 +88,7 @@ INCLUDE += -I$(ROOT_DIR)/Src/VideoChips
 INCLUDE += -I$(ROOT_DIR)/Src/VideoRender
 INCLUDE += -I$(ROOT_DIR)/Src/Sdl
 INCLUDE += -I$(ROOT_DIR)/Src/Pi
+INCLUDE += -I$(ROOT_DIR)/Src/Ss/rgbserver
 INCLUDE += -I$(ROOT_DIR)/Src/Z80
 
 vpath % $(ROOT_DIR)/Src/Arch
@@ -109,6 +110,8 @@ vpath % $(ROOT_DIR)/Src/VideoChips
 vpath % $(ROOT_DIR)/Src/VideoRender
 vpath % $(ROOT_DIR)/Src/Sdl
 vpath % $(ROOT_DIR)/Src/Pi
+vpath % $(ROOT_DIR)/Src/Ss
+vpath % $(ROOT_DIR)/Src/Ss/rgbserver
 vpath % $(ROOT_DIR)/Src/Z80
 
 #
@@ -120,7 +123,8 @@ SOURCE_FILES += PiMain.c
 ifdef RASPI_GPIO
 SOURCE_FILES += PiGpio.c
 endif
-SOURCE_FILES += PiVideo.c
+SOURCE_FILES += SsVideo.c
+SOURCE_FILES += rgbserver.c
 SOURCE_FILES += PiVideoRender.c
 SOURCE_FILES += PiNotifications.c
 SOURCE_FILES += PiShortcuts.c
