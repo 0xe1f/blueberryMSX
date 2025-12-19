@@ -66,7 +66,7 @@ extern "C" UInt32 boardSystemTime();
 Y8950Adpcm::Y8950Adpcm(Y8950& y8950_, const string& name_, int sampleRam)
 	: y8950(y8950_), name(name_ + " RAM"), ramSize(sampleRam), volume(0)
 {
-	ramBank = new byte[ramSize];
+	ramBank = new uint8_t[ramSize];
 	memset(ramBank, 0xFF, ramSize);
     sysTime = oldTime = boardSystemTime();
     unschedule(oldTime);
@@ -177,7 +177,7 @@ const string& Y8950Adpcm::schedName() const
 	return name;
 }
 
-void Y8950Adpcm::writeReg(byte rg, byte data, const EmuTime &time)
+void Y8950Adpcm::writeReg(uint8_t rg, uint8_t data, const EmuTime &time)
 {
 	//PRT_DEBUG("Y8950Adpcm: write "<<(int)rg<<" "<<(int)data);
 	switch (rg) {
@@ -271,9 +271,9 @@ void Y8950Adpcm::writeReg(byte rg, byte data, const EmuTime &time)
 	}
 }
 
-byte Y8950Adpcm::readReg(byte rg)
+uint8_t Y8950Adpcm::readReg(uint8_t rg)
 {
-	byte result;
+	uint8_t result;
 	switch (rg) {
 		case 0x0F: { // ADPCM-DATA
 			// TODO don't advance pointer when playing???
@@ -371,12 +371,12 @@ const string& Y8950Adpcm::getDescription() const
 	return desc;
 }
 
-byte Y8950Adpcm::read(unsigned address)
+uint8_t Y8950Adpcm::read(unsigned address)
 {
 	return ramBank[address];
 }
 
-void Y8950Adpcm::write(unsigned address, byte value)
+void Y8950Adpcm::write(unsigned address, uint8_t value)
 {
 	ramBank[address] = value;
 }
