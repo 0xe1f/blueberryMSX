@@ -424,7 +424,7 @@ void Y8950::Channel::keyOff()
 //**********************************************************//
 
 
-void Y8950::callback(byte flag)
+void Y8950::callback(uint8_t flag)
 {
 	setStatus(flag);
 }
@@ -888,7 +888,7 @@ void Y8950::setInternalVolume(short newVolume)
 //                                                  //
 //**************************************************//
 
-void Y8950::writeReg(byte rg, byte data, const EmuTime& time)
+void Y8950::writeReg(uint8_t rg, uint8_t data, const EmuTime& time)
 {
 	//PRT_DEBUG("Y8950 write " << (int)rg << " " << (int)data);
 	int stbl[32] = {
@@ -1135,12 +1135,12 @@ void Y8950::writeReg(byte rg, byte data, const EmuTime& time)
 	checkMute();
 }
 
-byte Y8950::readReg(byte rg, const EmuTime &time)
+uint8_t Y8950::readReg(uint8_t rg, const EmuTime &time)
 {
 	// TODO only when necessary
 //	Mixer::instance().updateStream(time);
 	
-	byte result;
+	uint8_t result;
 	switch (rg) {
 		case 0x05: // (KEYBOARD IN)
 //			result = connector.read(time); FIXME
@@ -1164,16 +1164,16 @@ byte Y8950::readReg(byte rg, const EmuTime &time)
 	return result;
 }
 
-byte Y8950::readStatus()
+uint8_t Y8950::readStatus()
 {
 	setStatus(STATUS_BUF_RDY);	// temp hack
-	byte tmp = status & (0x80 | statusMask);
+	uint8_t tmp = status & (0x80 | statusMask);
 	//PRT_DEBUG("Y8950 read status " << (int)tmp);
 	return tmp | 0x06;	// bit 1 and 2 are always 1
 }
 
 
-void Y8950::setStatus(byte flags)
+void Y8950::setStatus(uint8_t flags)
 {
 	status |= flags;
 	if (status & statusMask) {
@@ -1181,7 +1181,7 @@ void Y8950::setStatus(byte flags)
 		irq.set();
 	}
 }
-void Y8950::resetStatus(byte flags)
+void Y8950::resetStatus(uint8_t flags)
 {
 	status &= ~flags;
 	if (!(status & statusMask)) {
@@ -1189,7 +1189,7 @@ void Y8950::resetStatus(byte flags)
 		irq.reset();
 	}
 }
-void Y8950::changeStatusMask(byte newMask)
+void Y8950::changeStatusMask(uint8_t newMask)
 {
 	statusMask = newMask;
 	status &= statusMask;
@@ -1210,12 +1210,12 @@ unsigned Y8950::getSize() const
 	return 0x100;
 }
 
-byte Y8950::read(unsigned address)
+uint8_t Y8950::read(unsigned address)
 {
 	return reg[address];
 }
 
-void Y8950::write(unsigned address, byte value)
+void Y8950::write(unsigned address, uint8_t value)
 {
 	writeReg(address, value, boardSystemTime());
 }
