@@ -31,6 +31,7 @@
 #include "Properties.h"
 
 int emuCheckResetArgument(char* szLine);
+int emuCheckBackgroundArgument(char *cmdLine);
 char* emuCheckThemeArgument(char* szLine);
 void emuCheckFullscreenArgument(Properties* properties, char* szLine);
 int emuTryStartWithArguments(Properties* properties, char* cmdLine, char *gamedir);

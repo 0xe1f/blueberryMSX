@@ -25,6 +25,7 @@
 ******************************************************************************
 */
 
+#include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -251,6 +252,35 @@ int main(int argc, char **argv)
 #ifdef RASPI_GPIO
 	gpioInit();
 #endif
+	char szLine[8192] = "";
+	int i;
+	for (i = 1; i < argc; i++) {
+		if (strchr(argv[i], ' ') != NULL && argv[i][0] != '\"') {
+			strcat(szLine, "\"");
+			strcat(szLine, argv[i]);
+			strcat(szLine, "\"");
+		} else {
+			strcat(szLine, argv[i]);
+		}
+		strcat(szLine, " ");
+	}
+
+	if (emuCheckBackgroundArgument(szLine)) {
+		fprintf(stderr, "Background execution enabled\n");
+		pid_t pid = fork();
+		if (pid < 0) {
+			fprintf(stderr, "fork() failed\n");
+			return 1;
+		} else if (pid == 0) {
+			// Child; keep going
+			int dev_null_fd = open("/dev/null", O_WRONLY);
+			dup2(dev_null_fd, 1);
+			dup2(dev_null_fd, 2);
+		} else {
+			fprintf(stderr, "Continuing in background as pid %d...\n", pid);
+			return 0;
+		}
+	}
 
 	if (!piInitVideo()) {
 		fprintf(stderr, "piInitVideo() failed");
@@ -268,21 +298,8 @@ int main(int argc, char **argv)
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	SDL_Event event;
-	char szLine[8192] = "";
 	int resetProperties;
 	char path[512] = "";
-	int i;
-
-	for (i = 1; i < argc; i++) {
-		if (strchr(argv[i], ' ') != NULL && argv[i][0] != '\"') {
-			strcat(szLine, "\"");
-			strcat(szLine, argv[i]);
-			strcat(szLine, "\"");
-		} else {
-			strcat(szLine, argv[i]);
-		}
-		strcat(szLine, " ");
-	}
 
 	for (i = 0; i < JOYSTICK_COUNT; i++) {
 		joysticks[i] = SDL_JoystickOpen(i);

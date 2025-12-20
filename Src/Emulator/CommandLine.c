@@ -240,6 +240,19 @@ int emuCheckResetArgument(char* cmdLine) {
     return 0;
 }
 
+int emuCheckBackgroundArgument(char *cmdLine) {
+    int i;
+    char *argument;
+
+    for (i = 0; (argument = extractToken(cmdLine, i)) != NULL; i++) {
+        if (checkArg(argument, "background")) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 char* emuCheckThemeArgument(char* cmdLine){
     static char themeName[PROP_MAXPATH];
     int i;
