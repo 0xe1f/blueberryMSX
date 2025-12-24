@@ -6,4 +6,5 @@ ROM=$1
 shift
 
 sleep 1
+echo "Launching TERM=vt220 ./bluemsx -rom1 roms/$ROM.rom $@" >> log.txt 2>&1
 TERM=vt220 ./bluemsx -rom1 roms/$ROM.rom $@ >> log.txt 2>&1
