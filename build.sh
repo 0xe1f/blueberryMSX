@@ -1,4 +1,4 @@
 #!/bin/bash
 
 make && \
-    echo "bluemsx Machines"
+    echo "done:bluemsx Machines"
