@@ -15,6 +15,7 @@
 # Directories
 #
 ROOT_DIR   = .
+RGBS_DIR   = ../deps/rgbserver
 OUTPUT_DIR = objs
 
 BCM_INCDIR= /opt/vc/include
@@ -88,7 +89,7 @@ INCLUDE += -I$(ROOT_DIR)/Src/VideoChips
 INCLUDE += -I$(ROOT_DIR)/Src/VideoRender
 INCLUDE += -I$(ROOT_DIR)/Src/Sdl
 INCLUDE += -I$(ROOT_DIR)/Src/Pi
-INCLUDE += -I$(ROOT_DIR)/Src/Ss/rgbserver
+INCLUDE += -I$(RGBS_DIR)
 INCLUDE += -I$(ROOT_DIR)/Src/Z80
 
 vpath % $(ROOT_DIR)/Src/Arch
@@ -111,7 +112,7 @@ vpath % $(ROOT_DIR)/Src/VideoRender
 vpath % $(ROOT_DIR)/Src/Sdl
 vpath % $(ROOT_DIR)/Src/Pi
 vpath % $(ROOT_DIR)/Src/Ss
-vpath % $(ROOT_DIR)/Src/Ss/rgbserver
+vpath % $(RGBS_DIR)
 vpath % $(ROOT_DIR)/Src/Z80
 
 #
